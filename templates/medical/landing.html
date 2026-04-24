@@ -1,0 +1,59 @@
+{% extends "medical/base.html" %}
+
+{% block title %}CHA Medical Management{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-copy">
+        <p class="eyebrow">Republic health operations rebuilt for modern care</p>
+        <h1>Medical management for patients, doctors, departments, and emergency teams.</h1>
+        <p class="lead">
+            A secure Django platform for device readings, doctor feedback, service orders,
+            rapid emergency intake, and encrypted document management.
+        </p>
+        <div class="hero-actions">
+            <a class="button" href="{% url 'register' %}">Start registration</a>
+            <a class="button secondary" href="{% url 'login' %}">Enter system</a>
+        </div>
+    </div>
+    <div class="hero-panel">
+        <div class="metric-card">
+            <span>{{ patient_count }}</span>
+            <p>registered patients</p>
+        </div>
+        <div class="metric-card">
+            <span>{{ doctor_count }}</span>
+            <p>clinical staff</p>
+        </div>
+        <div class="metric-card">
+            <span>{{ reading_count }}</span>
+            <p>device readings</p>
+        </div>
+        <div class="metric-card">
+            <span>{{ report_count }}</span>
+            <p>doctor reports</p>
+        </div>
+    </div>
+</section>
+
+<section class="grid two">
+    <article class="panel">
+        <h2>Stakeholder flows</h2>
+        <ul class="clean-list">
+            <li>Patients register, upload daily readings, and review doctor guidance.</li>
+            <li>Doctors track recovery trends, prescribe actions, and request scans.</li>
+            <li>Departments process incoming orders and upload results.</li>
+            <li>Emergency services create fast intakes for new arrivals.</li>
+        </ul>
+    </article>
+    <article class="panel">
+        <h2>Security by default</h2>
+        <ul class="clean-list">
+            <li>Role-based access for all stakeholders.</li>
+            <li>Admin acknowledgment before patient and doctor activation.</li>
+            <li>Uploaded documents encrypted before database storage.</li>
+            <li>Cloud-ready settings with static asset support and CI hooks.</li>
+        </ul>
+    </article>
+</section>
+{% endblock %}

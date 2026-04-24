@@ -1,0 +1,18 @@
+{% extends "medical/base.html" %}
+
+{% block title %}Register | CHA{% endblock %}
+
+{% block content %}
+<section class="panel form-panel">
+    <p class="eyebrow">New stakeholder onboarding</p>
+    <h1>Create a CHA account</h1>
+    <p class="lead">Patients and doctors require administrator acknowledgment before full access is enabled.</p>
+    <form method="post" class="grid two">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="form-actions full">
+            <button class="button" type="submit">Create account</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

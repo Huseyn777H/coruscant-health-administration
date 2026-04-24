@@ -1,0 +1,15 @@
+{% extends "medical/base.html" %}
+
+{% block title %}{{ title }} | CHA{% endblock %}
+
+{% block content %}
+<section class="panel form-panel">
+    <p class="eyebrow">Workflow action</p>
+    <h1>{{ title }}</h1>
+    <form method="post" enctype="multipart/form-data" class="stack">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="button" type="submit">Save</button>
+    </form>
+</section>
+{% endblock %}

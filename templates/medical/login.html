@@ -1,0 +1,17 @@
+{% extends "medical/base.html" %}
+
+{% block title %}Login | CHA{% endblock %}
+
+{% block content %}
+<section class="auth-shell">
+    <div class="panel auth-panel">
+        <p class="eyebrow">Secure access</p>
+        <h1>Welcome back</h1>
+        <form method="post" class="stack">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="button" type="submit">Login</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

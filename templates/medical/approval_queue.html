@@ -1,0 +1,29 @@
+{% extends "medical/base.html" %}
+
+{% block title %}Approval Queue | CHA{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <p class="eyebrow">Administrator workflow</p>
+    <h1>Approval queue</h1>
+    <div class="approval-list">
+        {% for user in pending_users %}
+            <form method="post" class="approval-row">
+                {% csrf_token %}
+                <input type="hidden" name="user_id" value="{{ user.id }}">
+                <div>
+                    <strong>{{ user.full_display_name }}</strong>
+                    <p>{{ user.username }} • {{ user.get_role_display }} • {{ user.email }}</p>
+                </div>
+                <label class="checkbox">
+                    <input type="checkbox" name="is_approved" value="true">
+                    Approve
+                </label>
+                <button class="button" type="submit">Update</button>
+            </form>
+        {% empty %}
+            <p>No users waiting for approval.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

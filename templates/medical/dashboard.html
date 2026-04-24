@@ -1,0 +1,183 @@
+{% extends "medical/base.html" %}
+
+{% block title %}Dashboard | CHA{% endblock %}
+
+{% block content %}
+<section class="dashboard-head">
+    <div>
+        <p class="eyebrow">{{ request.user.get_role_display }}</p>
+        <h1>{{ request.user.full_display_name }}</h1>
+        <p class="lead">
+            {% if request.user.is_approved %}
+                Account status: active and approved.
+            {% else %}
+                Account status: waiting for administrator approval.
+            {% endif %}
+        </p>
+    </div>
+    <div class="quick-actions">
+        {% if request.user.role == "patient" %}
+            <a class="button" href="{% url 'submit_reading' %}">Upload reading</a>
+        {% endif %}
+        {% if request.user.role == "doctor" %}
+            <a class="button" href="{% url 'create_report' %}">Write report</a>
+            <a class="button secondary" href="{% url 'create_order' %}">Create order</a>
+        {% endif %}
+        {% if request.user.role == "administrator" %}
+            <a class="button" href="{% url 'approval_queue' %}">Review approvals</a>
+        {% endif %}
+        {% if request.user.role == "emergency" %}
+            <a class="button" href="{% url 'emergency_intake' %}">Fast intake</a>
+        {% endif %}
+        <a class="button secondary" href="{% url 'upload_document' %}">Upload document</a>
+    </div>
+</section>
+
+<section class="grid three">
+    <article class="panel">
+        <h2>Latest readings</h2>
+        <ul class="clean-list">
+            {% for reading in latest_readings %}
+                <li>{{ reading.patient.full_display_name }}: HR {{ reading.heart_rate }}, O2 {{ reading.blood_oxygen }}%</li>
+            {% empty %}
+                <li>No readings yet.</li>
+            {% endfor %}
+        </ul>
+    </article>
+    <article class="panel">
+        <h2>Doctor reports</h2>
+        <ul class="clean-list">
+            {% for report in latest_reports %}
+                <li>{{ report.patient.full_display_name }}: {{ report.report_title }} ({{ report.get_trend_display }})</li>
+            {% empty %}
+                <li>No reports yet.</li>
+            {% endfor %}
+        </ul>
+    </article>
+    <article class="panel">
+        <h2>Service orders</h2>
+        <ul class="clean-list">
+            {% for order in latest_orders %}
+                <li>{{ order.patient.full_display_name }}: {{ order.get_service_type_display }} ({{ order.get_status_display }})</li>
+            {% empty %}
+                <li>No service orders yet.</li>
+            {% endfor %}
+        </ul>
+    </article>
+</section>
+
+{% if request.user.role == "patient" %}
+<section class="grid two">
+    <article class="panel">
+        <h2>My readings</h2>
+        <ul class="clean-list">
+            {% for reading in my_readings %}
+                <li>{{ reading.recorded_at|date:"Y-m-d H:i" }}: temp {{ reading.temperature_c }}C, BP {{ reading.systolic_bp }}/{{ reading.diastolic_bp }}</li>
+            {% empty %}
+                <li>No personal readings yet.</li>
+            {% endfor %}
+        </ul>
+    </article>
+    <article class="panel">
+        <h2>My doctor guidance</h2>
+        <ul class="clean-list">
+            {% for report in my_reports %}
+                <li>{{ report.report_title }} by {{ report.doctor.full_display_name }}</li>
+            {% empty %}
+                <li>No reports assigned yet.</li>
+            {% endfor %}
+        </ul>
+        <h3>My documents</h3>
+        <ul class="clean-list">
+            {% for doc in my_documents %}
+                <li><a href="{% url 'download_document' doc.id %}">{{ doc.title }}</a></li>
+            {% empty %}
+                <li>No documents uploaded yet.</li>
+            {% endfor %}
+        </ul>
+    </article>
+</section>
+{% endif %}
+
+{% if request.user.role == "doctor" %}
+<section class="grid two">
+    <article class="panel">
+        <h2>Assigned patients</h2>
+        <ul class="clean-list">
+            {% for patient in patients %}
+                <li>{{ patient.full_display_name }}{% if patient.device_identifier %} / device {{ patient.device_identifier }}{% endif %}</li>
+            {% empty %}
+                <li>No approved patients yet.</li>
+            {% endfor %}
+        </ul>
+    </article>
+    <article class="panel">
+        <h2>My output</h2>
+        <ul class="clean-list">
+            {% for report in doctor_reports %}
+                <li>{{ report.patient.full_display_name }}: {{ report.report_title }}</li>
+            {% empty %}
+                <li>No reports submitted yet.</li>
+            {% endfor %}
+        </ul>
+    </article>
+</section>
+{% endif %}
+
+{% if request.user.role == "department" %}
+<section class="panel">
+    <h2>Assigned orders</h2>
+    <ul class="clean-list">
+        {% for order in assigned_orders %}
+            <li>
+                {{ order.patient.full_display_name }}: {{ order.get_service_type_display }}
+                {% if not order.has_result %}
+                    <a href="{% url 'upload_order_result' order.id %}">upload result</a>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li>No assigned orders yet.</li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+
+{% if request.user.role == "administrator" %}
+<section class="grid two">
+    <article class="panel">
+        <h2>Pending approvals</h2>
+        <p class="stat">{{ approval_total }}</p>
+        <ul class="clean-list">
+            {% for pending in pending_approvals %}
+                <li>{{ pending.full_display_name }} / {{ pending.get_role_display }}</li>
+            {% empty %}
+                <li>No approvals waiting.</li>
+            {% endfor %}
+        </ul>
+    </article>
+    <article class="panel">
+        <h2>Emergency intake feed</h2>
+        <ul class="clean-list">
+            {% for intake in latest_intakes %}
+                <li>{{ intake.full_name }} / {{ intake.triage_level }}</li>
+            {% empty %}
+                <li>No emergency intake records yet.</li>
+            {% endfor %}
+        </ul>
+    </article>
+</section>
+{% endif %}
+
+{% if request.user.role == "emergency" %}
+<section class="panel">
+    <h2>Recent intakes</h2>
+    <ul class="clean-list">
+        {% for intake in recent_intakes %}
+            <li>{{ intake.full_name }} / age {{ intake.age }} / {{ intake.triage_level }}</li>
+        {% empty %}
+            <li>No recent intakes yet.</li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+{% endblock %}
