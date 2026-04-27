@@ -5,8 +5,8 @@
 {% block content %}
 <section class="auth-shell">
     <div class="panel auth-panel">
-        <p class="eyebrow">Secure access</p>
-        <h1>Welcome back</h1>
+        <p class="eyebrow">Login</p>
+        <h1>Sign in</h1>
         <form method="post" class="stack">
             {% csrf_token %}
             {{ form.as_p }}

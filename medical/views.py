@@ -58,9 +58,9 @@ def register(request):
             login(request, user)
             messages.success(
                 request,
-                "Registration completed. Administrator approval is required before clinical access is enabled."
+                "Registration completed. Admin approval is required before full access is available."
                 if not user.is_approved
-                else "Registration completed successfully.",
+                else "Registration completed.",
             )
             return redirect("dashboard")
     else:

@@ -9,9 +9,9 @@
         <h1>{{ request.user.full_display_name }}</h1>
         <p class="lead">
             {% if request.user.is_approved %}
-                Account status: active and approved.
+                Account status: approved.
             {% else %}
-                Account status: waiting for administrator approval.
+                Account status: waiting for admin approval.
             {% endif %}
         </p>
     </div>
@@ -79,7 +79,7 @@
         </ul>
     </article>
     <article class="panel">
-        <h2>My doctor guidance</h2>
+        <h2>My reports</h2>
         <ul class="clean-list">
             {% for report in my_reports %}
                 <li>{{ report.report_title }} by {{ report.doctor.full_display_name }}</li>
@@ -102,7 +102,7 @@
 {% if request.user.role == "doctor" %}
 <section class="grid two">
     <article class="panel">
-        <h2>Assigned patients</h2>
+        <h2>Patients</h2>
         <ul class="clean-list">
             {% for patient in patients %}
                 <li>{{ patient.full_display_name }}{% if patient.device_identifier %} / device {{ patient.device_identifier }}{% endif %}</li>
@@ -112,7 +112,7 @@
         </ul>
     </article>
     <article class="panel">
-        <h2>My output</h2>
+        <h2>My reports</h2>
         <ul class="clean-list">
             {% for report in doctor_reports %}
                 <li>{{ report.patient.full_display_name }}: {{ report.report_title }}</li>

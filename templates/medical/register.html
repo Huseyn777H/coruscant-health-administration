@@ -4,9 +4,9 @@
 
 {% block content %}
 <section class="panel form-panel">
-    <p class="eyebrow">New stakeholder onboarding</p>
+    <p class="eyebrow">Register</p>
     <h1>Create a CHA account</h1>
-    <p class="lead">Patients and doctors require administrator acknowledgment before full access is enabled.</p>
+    <p class="lead">Patient and doctor accounts need admin approval before full access is available.</p>
     <form method="post" class="grid two">
         {% csrf_token %}
         {{ form.as_p }}

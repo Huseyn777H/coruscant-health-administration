@@ -5,54 +5,54 @@
 {% block content %}
 <section class="hero">
     <div class="hero-copy">
-        <p class="eyebrow">Republic health operations rebuilt for modern care</p>
-        <h1>Medical management for patients, doctors, departments, and emergency teams.</h1>
+        <p class="eyebrow">CHA system</p>
+        <h1>Simple medical management system for patients, doctors and hospital staff.</h1>
         <p class="lead">
-            A secure Django platform for device readings, doctor feedback, service orders,
-            rapid emergency intake, and encrypted document management.
+            This project was built with Django for patient registration, health readings,
+            doctor reports, service orders, emergency intake and document upload.
         </p>
         <div class="hero-actions">
-            <a class="button" href="{% url 'register' %}">Start registration</a>
-            <a class="button secondary" href="{% url 'login' %}">Enter system</a>
+            <a class="button" href="{% url 'register' %}">Register</a>
+            <a class="button secondary" href="{% url 'login' %}">Login</a>
         </div>
     </div>
     <div class="hero-panel">
         <div class="metric-card">
             <span>{{ patient_count }}</span>
-            <p>registered patients</p>
+            <p>patients</p>
         </div>
         <div class="metric-card">
             <span>{{ doctor_count }}</span>
-            <p>clinical staff</p>
+            <p>doctors</p>
         </div>
         <div class="metric-card">
             <span>{{ reading_count }}</span>
-            <p>device readings</p>
+            <p>readings</p>
         </div>
         <div class="metric-card">
             <span>{{ report_count }}</span>
-            <p>doctor reports</p>
+            <p>reports</p>
         </div>
     </div>
 </section>
 
 <section class="grid two">
     <article class="panel">
-        <h2>Stakeholder flows</h2>
+        <h2>Main features</h2>
         <ul class="clean-list">
-            <li>Patients register, upload daily readings, and review doctor guidance.</li>
-            <li>Doctors track recovery trends, prescribe actions, and request scans.</li>
-            <li>Departments process incoming orders and upload results.</li>
-            <li>Emergency services create fast intakes for new arrivals.</li>
+            <li>Patients can register and upload daily health readings.</li>
+            <li>Doctors can create reports and request services like CT scan or PET scan.</li>
+            <li>Departments can see assigned orders and upload results.</li>
+            <li>Emergency users can quickly add new patient intake data.</li>
         </ul>
     </article>
     <article class="panel">
-        <h2>Security by default</h2>
+        <h2>Security</h2>
         <ul class="clean-list">
-            <li>Role-based access for all stakeholders.</li>
-            <li>Admin acknowledgment before patient and doctor activation.</li>
-            <li>Uploaded documents encrypted before database storage.</li>
-            <li>Cloud-ready settings with static asset support and CI hooks.</li>
+            <li>Users have different roles in the system.</li>
+            <li>Patient and doctor accounts need admin approval.</li>
+            <li>Uploaded files are encrypted before being stored.</li>
+            <li>The project can be deployed with cloud settings.</li>
         </ul>
     </article>
 </section>

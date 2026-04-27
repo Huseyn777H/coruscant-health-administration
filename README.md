@@ -1,6 +1,8 @@
 # Coruscant Health Administration
 
-Coruscant Health Administration is a Django-based medical management system built for the Qwasar task requirements. It supports:
+This is a Django project for the Qwasar Coruscant Health Administration task.
+
+It includes:
 
 - patient and doctor self-registration with administrator approval
 - health reading uploads from patient devices
@@ -13,44 +15,30 @@ Coruscant Health Administration is a Django-based medical management system buil
 
 - Python 3.13
 - Django 5
-- SQLite locally, cloud-ready via `DATABASE_URL`
-- WhiteNoise + Gunicorn for deployment
+- SQLite for local use
+- PostgreSQL or another database through `DATABASE_URL` for deployment
 
 ## Local run
 
 ```bash
 pip install -r requirements.txt
 python manage.py migrate
-python manage.py seed_demo
+python manage.py createsuperuser
 python manage.py runserver
 ```
 
-Demo logins after `seed_demo`:
-
-- `cha_admin` / `AdminPass123!`
-- `patient_demo` / `PatientPass123!`
-- `doctor_demo` / `DoctorPass123!`
-- `department_demo` / `DepartmentPass123!`
-- `emergency_demo` / `EmergencyPass123!`
-
 ## Deployment
 
-The repository includes:
+Files added for deployment:
 
 - `render.yaml` for Render deployment
-- `Procfile` for process definition
-- `.github/workflows/django.yml` for CI
-- `/health/` for health checks
-- `seed_demo` management command for reviewer-friendly sample data
+- `Procfile`
+- `.github/workflows/django.yml`
 
-## Submission-ready Render flow
+Basic steps:
 
-1. Push this project to GitHub.
-2. In Render, create the Blueprint from `render.yaml`.
-3. After the first deploy finishes, open a Render shell and run `python manage.py seed_demo`.
-4. Copy the live public URL and replace the content of `my_coruscant_health_administration_url.txt` with only that URL.
-
-I used Render's current Blueprint fields such as `runtime`, `buildCommand`, `startCommand`, `healthCheckPath`, and generated env vars based on the official docs:
-
-- [Blueprint YAML Reference](https://render.com/docs/blueprint-spec)
-- [Deploy a Django App on Render](https://render.com/docs/deploy-django)
+1. Push the project to GitHub.
+2. Create a new web service on Render.
+3. Add the environment variables from `.env.example`.
+4. Run migrations.
+5. Put the final deployed URL into `my_coruscant_health_administration_url.txt`.
