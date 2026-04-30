@@ -7,3 +7,5 @@ env/
 db.sqlite3
 staticfiles/
 .env
+coruscant-health-administration-submission.zip
+coruscant-health-administration-submission/
