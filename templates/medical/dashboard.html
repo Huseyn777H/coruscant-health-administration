@@ -77,6 +77,13 @@
                 <li>No personal readings yet.</li>
             {% endfor %}
         </ul>
+        {% if my_readings.has_other_pages %}
+            <div class="pagination">
+                {% if my_readings.has_previous %}<a href="?readings_page={{ my_readings.previous_page_number }}">Previous</a>{% endif %}
+                <span>Page {{ my_readings.number }} of {{ my_readings.paginator.num_pages }}</span>
+                {% if my_readings.has_next %}<a href="?readings_page={{ my_readings.next_page_number }}">Next</a>{% endif %}
+            </div>
+        {% endif %}
     </article>
     <article class="panel">
         <h2>My reports</h2>
@@ -87,6 +94,13 @@
                 <li>No reports assigned yet.</li>
             {% endfor %}
         </ul>
+        {% if my_reports.has_other_pages %}
+            <div class="pagination">
+                {% if my_reports.has_previous %}<a href="?reports_page={{ my_reports.previous_page_number }}">Previous</a>{% endif %}
+                <span>Page {{ my_reports.number }} of {{ my_reports.paginator.num_pages }}</span>
+                {% if my_reports.has_next %}<a href="?reports_page={{ my_reports.next_page_number }}">Next</a>{% endif %}
+            </div>
+        {% endif %}
         <h3>My documents</h3>
         <ul class="clean-list">
             {% for doc in my_documents %}
@@ -95,6 +109,13 @@
                 <li>No documents uploaded yet.</li>
             {% endfor %}
         </ul>
+        {% if my_documents.has_other_pages %}
+            <div class="pagination">
+                {% if my_documents.has_previous %}<a href="?documents_page={{ my_documents.previous_page_number }}">Previous</a>{% endif %}
+                <span>Page {{ my_documents.number }} of {{ my_documents.paginator.num_pages }}</span>
+                {% if my_documents.has_next %}<a href="?documents_page={{ my_documents.next_page_number }}">Next</a>{% endif %}
+            </div>
+        {% endif %}
     </article>
 </section>
 {% endif %}
@@ -110,6 +131,13 @@
                 <li>No approved patients yet.</li>
             {% endfor %}
         </ul>
+        {% if patients.has_other_pages %}
+            <div class="pagination">
+                {% if patients.has_previous %}<a href="?patients_page={{ patients.previous_page_number }}">Previous</a>{% endif %}
+                <span>Page {{ patients.number }} of {{ patients.paginator.num_pages }}</span>
+                {% if patients.has_next %}<a href="?patients_page={{ patients.next_page_number }}">Next</a>{% endif %}
+            </div>
+        {% endif %}
     </article>
     <article class="panel">
         <h2>My reports</h2>
@@ -120,6 +148,13 @@
                 <li>No reports submitted yet.</li>
             {% endfor %}
         </ul>
+        {% if doctor_reports.has_other_pages %}
+            <div class="pagination">
+                {% if doctor_reports.has_previous %}<a href="?doctor_reports_page={{ doctor_reports.previous_page_number }}">Previous</a>{% endif %}
+                <span>Page {{ doctor_reports.number }} of {{ doctor_reports.paginator.num_pages }}</span>
+                {% if doctor_reports.has_next %}<a href="?doctor_reports_page={{ doctor_reports.next_page_number }}">Next</a>{% endif %}
+            </div>
+        {% endif %}
     </article>
 </section>
 {% endif %}
@@ -139,6 +174,13 @@
             <li>No assigned orders yet.</li>
         {% endfor %}
     </ul>
+    {% if assigned_orders.has_other_pages %}
+        <div class="pagination">
+            {% if assigned_orders.has_previous %}<a href="?assigned_orders_page={{ assigned_orders.previous_page_number }}">Previous</a>{% endif %}
+            <span>Page {{ assigned_orders.number }} of {{ assigned_orders.paginator.num_pages }}</span>
+            {% if assigned_orders.has_next %}<a href="?assigned_orders_page={{ assigned_orders.next_page_number }}">Next</a>{% endif %}
+        </div>
+    {% endif %}
 </section>
 {% endif %}
 
@@ -178,6 +220,13 @@
             <li>No recent intakes yet.</li>
         {% endfor %}
     </ul>
+    {% if recent_intakes.has_other_pages %}
+        <div class="pagination">
+            {% if recent_intakes.has_previous %}<a href="?intakes_page={{ recent_intakes.previous_page_number }}">Previous</a>{% endif %}
+            <span>Page {{ recent_intakes.number }} of {{ recent_intakes.paginator.num_pages }}</span>
+            {% if recent_intakes.has_next %}<a href="?intakes_page={{ recent_intakes.next_page_number }}">Next</a>{% endif %}
+        </div>
+    {% endif %}
 </section>
 {% endif %}
 {% endblock %}

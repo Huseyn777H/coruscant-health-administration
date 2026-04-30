@@ -214,6 +214,15 @@ textarea {
     grid-column: 1 / -1;
 }
 
+.pagination {
+    margin-top: 12px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 14px;
+}
+
 @media (max-width: 900px) {
     .hero,
     .grid.two,

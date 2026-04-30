@@ -2,6 +2,8 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
+from django.core.paginator import Paginator
+from cryptography.fernet import InvalidToken
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -34,6 +36,11 @@ from .services import decrypt_bytes
 class CHAloginView(LoginView):
     authentication_form = StyledAuthenticationForm
     template_name = "medical/login.html"
+
+
+def paginate_queryset(request, queryset, page_param, per_page=5):
+    paginator = Paginator(queryset, per_page)
+    return paginator.get_page(request.GET.get(page_param))
 
 
 def landing(request):
@@ -82,23 +89,37 @@ def dashboard(request):
     if user.role == UserRole.PATIENT:
         context.update(
             {
-                "my_readings": user.health_readings.all()[:8],
-                "my_reports": user.doctor_reports.select_related("doctor")[:8],
-                "my_documents": user.documents.all()[:8],
+                "my_readings": paginate_queryset(request, user.health_readings.all(), "readings_page"),
+                "my_reports": paginate_queryset(
+                    request, user.doctor_reports.select_related("doctor"), "reports_page"
+                ),
+                "my_documents": paginate_queryset(request, user.documents.all(), "documents_page"),
             }
         )
     elif user.role == UserRole.DOCTOR:
         context.update(
             {
-                "patients": User.objects.filter(role=UserRole.PATIENT, is_approved=True),
-                "doctor_reports": user.written_reports.select_related("patient")[:8],
-                "doctor_orders": user.issued_service_orders.select_related("patient", "department")[:8],
+                "patients": paginate_queryset(
+                    request,
+                    User.objects.filter(role=UserRole.PATIENT, is_approved=True).order_by("username"),
+                    "patients_page",
+                ),
+                "doctor_reports": paginate_queryset(
+                    request, user.written_reports.select_related("patient"), "doctor_reports_page"
+                ),
+                "doctor_orders": paginate_queryset(
+                    request,
+                    user.issued_service_orders.select_related("patient", "department"),
+                    "doctor_orders_page",
+                ),
             }
         )
     elif user.role == UserRole.DEPARTMENT:
         context.update(
             {
-                "assigned_orders": ServiceOrder.objects.filter(department=user)[:8],
+                "assigned_orders": paginate_queryset(
+                    request, ServiceOrder.objects.filter(department=user), "assigned_orders_page"
+                ),
             }
         )
     elif user.role == UserRole.ADMINISTRATOR:
@@ -108,7 +129,9 @@ def dashboard(request):
             }
         )
     elif user.role == UserRole.EMERGENCY:
-        context.update({"recent_intakes": user.emergency_intakes.all()[:8]})
+        context.update(
+            {"recent_intakes": paginate_queryset(request, user.emergency_intakes.all(), "intakes_page")}
+        )
 
     return render(request, "medical/dashboard.html", context)
 
@@ -200,7 +223,11 @@ def upload_order_result(request, order_id):
 @login_required
 @role_required(UserRole.ADMINISTRATOR)
 def approval_queue(request):
-    pending_users = User.objects.filter(is_approved=False).exclude(role=UserRole.ADMINISTRATOR)
+    pending_users = (
+        User.objects.filter(is_approved=False)
+        .exclude(role=UserRole.ADMINISTRATOR)
+        .order_by("username")
+    )
     if request.method == "POST":
         user = get_object_or_404(pending_users, pk=request.POST.get("user_id"))
         form = ApprovalForm(request.POST, instance=user)
@@ -208,7 +235,8 @@ def approval_queue(request):
             form.save()
             messages.success(request, f"{user.full_display_name} approval updated.")
             return redirect("approval_queue")
-    return render(request, "medical/approval_queue.html", {"pending_users": pending_users})
+    paginated_users = paginate_queryset(request, pending_users, "page")
+    return render(request, "medical/approval_queue.html", {"pending_users": paginated_users})
 
 
 @login_required
@@ -249,7 +277,10 @@ def download_document(request, document_id):
     if request.user != document.owner and request.user not in {document.uploaded_by}:
         if request.user.role not in {UserRole.ADMINISTRATOR, UserRole.DOCTOR, UserRole.DEPARTMENT}:
             raise Http404("Document unavailable.")
-    payload = decrypt_bytes(bytes(document.encrypted_payload))
+    try:
+        payload = decrypt_bytes(bytes(document.encrypted_payload))
+    except InvalidToken as exc:
+        raise Http404("Document unavailable.") from exc
     response = HttpResponse(payload, content_type=document.content_type or "application/octet-stream")
     response["Content-Disposition"] = f'attachment; filename="{document.original_filename}"'
     return response

@@ -25,5 +25,12 @@
             <p>No users waiting for approval.</p>
         {% endfor %}
     </div>
+    {% if pending_users.has_other_pages %}
+        <div class="pagination">
+            {% if pending_users.has_previous %}<a href="?page={{ pending_users.previous_page_number }}">Previous</a>{% endif %}
+            <span>Page {{ pending_users.number }} of {{ pending_users.paginator.num_pages }}</span>
+            {% if pending_users.has_next %}<a href="?page={{ pending_users.next_page_number }}">Next</a>{% endif %}
+        </div>
+    {% endif %}
 </section>
 {% endblock %}
