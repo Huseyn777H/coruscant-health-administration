@@ -9,3 +9,5 @@ staticfiles/
 .env
 coruscant-health-administration-submission.zip
 coruscant-health-administration-submission/
+
+.vercel
